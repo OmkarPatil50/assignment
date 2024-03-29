@@ -5,7 +5,7 @@ import Home from './pages/Home';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App font-poppins">
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/organization' element={<Home />} />

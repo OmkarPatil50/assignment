@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VscThreeBars } from "react-icons/vsc";
 import { FaMagnifyingGlass, FaRegBell } from "react-icons/fa6";
 import { FiBox, FiHome } from "react-icons/fi";
@@ -9,9 +9,7 @@ import { GiSandsOfTime } from "react-icons/gi";
 import { NavLink } from "react-router-dom";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
-
+const Sidebar = ({ isOpen, setIsOpen }) => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -64,10 +62,20 @@ const Sidebar = () => {
     },
   ];
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsOpen(window.innerWidth > 1024);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div
-      className={`z-[50] pb-5 max-h-screen left-0 bg-stone-800 text-white flex flex-col justify-start transition-all duration-300 ${
-        isOpen ? "w-72" : "w-20"
+      className={`fixed z-[50] pb-5 h-screen left-0 bg-stone-800 text-white hidden md:flex flex-col justify-start transition-all duration-300 ${
+        isOpen ? "w-80" : "w-20"
       }`}
     >
       <div className="p-4 flex justify-between items-center">
@@ -119,50 +127,53 @@ const Sidebar = () => {
           );
         })}
       </nav>
-
-      <div
-        className={`my-10 ${isOpen ? "mx-6 space-y-6" : "mx-auto space-y-8"}`}
-      >
-        {submenu?.map((item, index) => {
-          return (
-            <li
-              key={index}
-              className={`w-full flex justify-start items-center gap-4 ${
-                isOpen ? "text-base" : "text-2xl"
-              } cursor-pointer`}
-            >
-              {item?.icon}{" "}
-              <span className={isOpen ? "inline" : "hidden"}>
-                {item?.display}
-              </span>
-              {item?.display === "Notifications" && isOpen && (
-                <div className="justify-self-end rounded-sm px-2 bg-primaryColor">
-                  12
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </div>
-      <div
-        className={`flex justify-between items-center p-3 rounded-md ${
-          isOpen ? "bg-neutral-700" : "transparent"
-        } mx-2`}
-      >
-        <div className="flex justify-between items-center gap-2">
-          <div className="w-10 h-10 rounded-full overflow-hidden">
-            <img
-              src="https://c1.klipartz.com/pngpicture/823/765/sticker-png-login-icon-system-administrator-user-user-profile-icon-design-avatar-face-head.png"
-              alt="user"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className={`${isOpen ? "inline" : "hidden"}`}>
-            <h3>Brooklyn Simmons</h3>
-            <p className="text-neutral-400">test@example.com</p>
-          </div>
+      <div className="justify-self-end">
+        <div
+          className={`my-10 ${isOpen ? "mx-6 space-y-6" : "mx-auto space-y-8"}`}
+        >
+          {submenu?.map((item, index) => {
+            return (
+              <li
+                key={index}
+                className={`flex items-center gap-4 ${
+                  isOpen ? "text-base justify-start" : "text-2xl justify-center"
+                } cursor-pointer`}
+              >
+                {item?.icon}{" "}
+                <span className={isOpen ? "inline" : "hidden"}>
+                  {item?.display}
+                </span>
+                {item?.display === "Notifications" && isOpen && (
+                  <div className="justify-self-end rounded-sm px-2 bg-primaryColor">
+                    12
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </div>
-        <p className={`${isOpen ? "inline" : "hidden"} text-neutral-400`}>:</p>
+        <div
+          className={`flex justify-between items-center p-3 rounded-md ${
+            isOpen ? "bg-neutral-700" : "transparent"
+          } mx-2`}
+        >
+          <div className="flex justify-between items-center gap-2">
+            <div className="w-10 h-10 rounded-full overflow-hidden">
+              <img
+                src="https://c1.klipartz.com/pngpicture/823/765/sticker-png-login-icon-system-administrator-user-user-profile-icon-design-avatar-face-head.png"
+                alt="user"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className={`${isOpen ? "inline" : "hidden"}`}>
+              <h3>Brooklyn Simmons</h3>
+              <p className="text-neutral-400">test@example.com</p>
+            </div>
+          </div>
+          <p className={`${isOpen ? "inline" : "hidden"} text-neutral-400`}>
+            :
+          </p>
+        </div>
       </div>
     </div>
   );
